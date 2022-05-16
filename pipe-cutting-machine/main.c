@@ -5,10 +5,13 @@
  * Author : Dasith Rathnasinghe
  * Atmega32-1
  */
-
+//TODO casting
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/delay.h>
+#include <math.h>
+#include <stdio.h>
 
 static volatile int pulse1 = 0; // integer  to access all though the program
 static volatile int i = 0;
@@ -22,7 +25,7 @@ int wasteBinDistance1 = 20;
 int wasteBinDistance2 = 10;
 int minLen=4;
 int maxRadius=25;
-int8_t receivedData;
+char* receivedData;
 int isInputDataRecevied;
 
 void initUSART(){
@@ -488,7 +491,8 @@ int main(void)
 		ult2_distance = getUltrasonic2Distance();
 		ult3_distance = getUltrasonic3Distance();
 		// move both clutches forward until ultrasonic output smallest number
-		rotateStepper1(1, ult2_distance) && rotateStepper2(1, ult3_distance);
+		rotateStepper1(1, ult2_distance);
+		rotateStepper2(1, ult3_distance);
 		while ((getUltrasonic2Distance() >= 3) && (getUltrasonic3Distance() >= 3));
 
 		// move clutches through rail to align
@@ -535,7 +539,7 @@ int main(void)
 			while((getUltrasonic1Distance()-ult1_distance)<length)
 			stopDCMotors();
 			// rotate stepper motor3 forward
-			rotateStepper3(1,maxRadius)			
+			rotateStepper3(1,maxRadius);			
 			// pipe cutting process
 			// start rotating cutting blade DC motor
 			sendData("START");
