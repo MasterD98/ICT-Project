@@ -22,7 +22,7 @@ Discarded input sections
  .data          0x00000000        0x0 dcmotor.o
  .bss           0x00000000        0x0 dcmotor.o
  .text.initDCMotor
-                0x00000000       0x14 dcmotor.o
+                0x00000000       0x10 dcmotor.o
  .text          0x00000000        0x0 keypad.o
  .data          0x00000000        0x0 keypad.o
  .bss           0x00000000        0x0 keypad.o
@@ -494,14 +494,14 @@ END GROUP
  .debug_abbrev  0x00000744      0x162 main.o
  .debug_abbrev  0x000008a6       0xed usart.o
 
-.debug_line     0x00000000      0xb57
+.debug_line     0x00000000      0xb51
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x116 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega32/avr5/crtatmega32.o
- .debug_line    0x00000116       0xf8 dcmotor.o
- .debug_line    0x0000020e      0x2a1 keypad.o
- .debug_line    0x000004af      0x21d lcd.o
- .debug_line    0x000006cc      0x342 main.o
- .debug_line    0x00000a0e      0x149 usart.o
+ .debug_line    0x00000116       0xf2 dcmotor.o
+ .debug_line    0x00000208      0x2a1 keypad.o
+ .debug_line    0x000004a9      0x21d lcd.o
+ .debug_line    0x000006c6      0x342 main.o
+ .debug_line    0x00000a08      0x149 usart.o
 
 .debug_frame    0x00000000      0x18c
  *(.debug_frame)

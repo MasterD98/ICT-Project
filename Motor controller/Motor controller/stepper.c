@@ -8,8 +8,8 @@
 #include "stepper.h"
 
 void initSteppers(){
-		DDRA = 0xFF;
-		DDRC = 0xFF;
+	DDRA = 0xFF;
+	DDRC = 0xFF;
 }
 
 void rotateStepper_1(int direction, float distance)
@@ -182,47 +182,38 @@ void rotateStepper_4(int direction){
 	if (direction == 1)
 	{
 		/* Rotate  clockwise */
-		for (int i = 0; i < 15; i++) // 108 degree cutting arm
-		{
-			PORTC = 0x30;
-			_delay_ms(period);
-			PORTC = 0x20;
-			_delay_ms(period);
-			PORTC = 0x60;
-			_delay_ms(period);
-			PORTC = 0x40;
-			_delay_ms(period);
-			PORTC = 0xc0;
-			_delay_ms(period);
-			PORTC = 0x80;
-			_delay_ms(period);
-			PORTC = 0x90;
-			_delay_ms(period);
-			PORTC = 0x10;
-			_delay_ms(period);
-			PORTC = 0x30;
-			_delay_ms(period);
-		}
-
-		_delay_ms(10);
+		PORTC = 0x30;
+		_delay_ms(period);
+		PORTC = 0x20;
+		_delay_ms(period);
+		PORTC = 0x60;
+		_delay_ms(period);
+		PORTC = 0x40;
+		_delay_ms(period);
+		PORTC = 0xc0;
+		_delay_ms(period);
+		PORTC = 0x80;
+		_delay_ms(period);
+		PORTC = 0x90;
+		_delay_ms(period);
+		PORTC = 0x10;
+		_delay_ms(period);
+		PORTC = 0x30;
+		_delay_ms(period);
 	}
 	else
 	{
 		/* Rotate  Counterclockwise  */
-		for (int i = 0; i < 15; i++)
-		{
-			PORTC = 0x30;
-			_delay_ms(period);
-			PORTC = 0x90;
-			_delay_ms(period);
-			PORTC = 0xc0;
-			_delay_ms(period);
-			PORTC = 0x60;
-			_delay_ms(period);
-			PORTC = 0x30;
-			_delay_ms(period);
-		}
-
+		PORTC = 0x30;
+		_delay_ms(period);
+		PORTC = 0x90;
+		_delay_ms(period);
+		PORTC = 0xc0;
+		_delay_ms(period);
+		PORTC = 0x60;
+		_delay_ms(period);
+		PORTC = 0x30;
+		_delay_ms(period);
 		_delay_ms(10);
 	}
 }
