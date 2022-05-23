@@ -101,17 +101,17 @@ ISR(INT1_vect) // interrupt service routine when there is a change in logic leve
 	if (j == 0)
 	{ // when logic change from LOW to HIGH
 
-		TCCR1B |= (1 << CS10); // enabling counter
+		TCCR0 |= (1 << CS10); // enabling counter
 
 		i = 1;
 	}
 	if (j == 1)
 	{
-		TCCR1B = 0; // disabling counter
+		TCCR0 = 0; // disabling counter
 
-		pulse2 = TCNT1; // count memory is updated to intege
+		pulse2 = TCNT0; // count memory is updated to intege
 
-		TCNT1 = 0; // resetting the counter memory
+		TCNT0 = 0; // resetting the counter memory
 		ult2_count = (pulse2 / 58) + 1;
 		j = 0;
 	}
@@ -123,17 +123,17 @@ ISR(INT2_vect) // interrupt service routine when there is a change in logic leve
 	if ((MCUCSR & (1 << ISC2)))
 	{ // when logic change from LOW to HIGH
 
-		TCCR1B |= (1 << CS10);	// enabling counter
+		TCCR2 |= (1 << CS10);	// enabling counter
 		MCUCSR &= ~(1 << ISC2); // HIGH to LOW
 	}
 	else
 	{ // when logic from HIGH to LOW
 
-		TCCR1B = 0; // disabling counter
+		TCCR2 = 0; // disabling counter
 
-		pulse3 = TCNT1; // count memory is updated to integer
+		pulse3 = TCNT2; // count memory is updated to integer
 		ult3_count = round(pulse3 / 58.3);
-		TCNT1 = 0; // resetting the counter memory
+		TCNT2 = 0; // resetting the counter memory
 		MCUCSR |= (1 << ISC2);
 	}
 }

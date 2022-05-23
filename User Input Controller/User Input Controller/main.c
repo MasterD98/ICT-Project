@@ -6,6 +6,11 @@
  */ 
 
 #define F_CPU 16000000UL
+#define START 1
+#define STOP 0
+#define HIGH_SPEED 2
+#define LOW_SPEED 3
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -20,28 +25,27 @@ unsigned char y;
 int x1=0 ; // variable for length of the pipe
 int x2=0; // variable for quantity
 int8_t receivedData;
-int isInputDataRecevied;
+int isInputDataRecevied=0;
 
 ISR(USART_RXC_vect){
 	receivedData=UDR;
-	if(receivedData=="START"){
+	if(receivedData==START){
 		rotateMotor();
-	}else if("STOP"){
+	}else if(receivedData==STOP){
 		stopMotor();
-	}else if("HIGH"){
+	}else if(receivedData==HIGH_SPEED){
 		setMotorSpeed(255);
-	}else if("LOW"){
+	}else if(receivedData==LOW_SPEED){
 		setMotorSpeed(100);
 	}
-	
 	isInputDataRecevied=1;
 }
 
 int main(void)
 {
+	initUSART();
 	DDRA=0x0F;
 	lcd_init();
-	initUSART();
 	sei();
 	lcd_print("  HELLO USER ");
 	_delay_ms(100);

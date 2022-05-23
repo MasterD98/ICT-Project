@@ -6,6 +6,11 @@
  */ 
 
 #define F_CPU 16000000UL
+#define START 1
+#define STOP 0
+#define HIGH_SPEED 2
+#define LOW_SPEED 3
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -16,12 +21,14 @@
 #include "dcmotor.h"
 #include "stepper.h"
 
-
+int static volatile ult1_distance;
+int static volatile ult2_distance;
+int static volatile ult3_distance;
 int wasteBinDistance1 = 20;
 int wasteBinDistance2 = 10;
 int minLen=4;
 int maxRadius=25;
-char* receivedData;
+int receivedData;
 int isInputDataRecevied;
 
 
@@ -34,9 +41,6 @@ ISR(USART_RXC_vect){
 
 int main(void)
 {
-	int ult1_distance;
-	int ult2_distance;
-	int ult3_distance;
 	int rounds;
 	int length;
 	int isMetal;
@@ -52,12 +56,12 @@ int main(void)
 		if (PINB & 1 << PB5){ // Change DC motor speed
 			// metal
 			isMetal = 1;
-			sendData("HIGH");
+			sendData(HIGH_SPEED);
 			
 			}else{
 			// PVC
 			isMetal = 0;
-			sendData("LOW");
+			sendData(LOW_SPEED);
 		}
 
 		// TODO USART send message
@@ -84,11 +88,12 @@ int main(void)
 			stopDCMotors();
 		}
 
-		while(!isInputDataRecevied);
-		length=receivedData;
+		while(!isInputDataRecevied);//get length value from user input
+		length=(int)receivedData;
 		isInputDataRecevied=0;
-		while(!isInputDataRecevied);
-		rounds=receivedData;
+		
+		while(!isInputDataRecevied);//get unit value from user input
+		rounds=(int)receivedData;
 		isInputDataRecevied=0;
 
 		// repeat cutting process(loop rounds time)
@@ -118,11 +123,12 @@ int main(void)
 			rotateStepper_3(1,maxRadius);
 			// pipe cutting process
 			// start rotating cutting blade DC motor
-			sendData("START");
+			sendData(START);
 			// rotate stepper motor4
 			rotateStepper_4(1);
 			rotateStepper_4(0);
 			rotateStepper_3(0,maxRadius);
+			sendData(STOP);
 		}
 
 		// check if leftover pipe is waste or not
