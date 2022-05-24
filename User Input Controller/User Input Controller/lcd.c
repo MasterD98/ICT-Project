@@ -40,7 +40,7 @@ void lcddata(unsigned char data){
 void lcd_init()//function to LCD initialization
 {
 	DDRC=0xFF;
-	DDRD=0xFF;
+	DDRD|=(1<<EN);
 	PORTD&=~(1<<EN);
 	lcdcmd(0x33);
 	lcdcmd(0x32);

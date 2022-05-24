@@ -25,7 +25,6 @@ unsigned char y;
 int x1=0 ; // variable for length of the pipe
 int x2=0; // variable for quantity
 int8_t receivedData;
-int isInputDataRecevied=0;
 
 ISR(USART_RXC_vect){
 	receivedData=UDR;
@@ -38,7 +37,6 @@ ISR(USART_RXC_vect){
 	}else if(receivedData==LOW_SPEED){
 		setMotorSpeed(100);
 	}
-	isInputDataRecevied=1;
 }
 
 int main(void)
@@ -116,11 +114,9 @@ int main(void)
 	{
 		//send length
 		sendData(x1);
-		// wait
-		_delay_ms(500);
-		//send quantity
+		_delay_ms(100);
 		sendData(x2);
-		
+	
 		lcdcmd(0x01);
 		lcdcmd(0x0E);
 		_delay_ms(100);

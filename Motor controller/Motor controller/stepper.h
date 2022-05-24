@@ -13,11 +13,13 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 void initSteppers();
-void rotateStepper_1(int direction, float distance);
-void rotateStepper_2(int direction, float distance);
-void rotateStepper_3(int direction, float distance);
+void rotateStepper_1(int distance);
+void rotateStepper_2(int distance);
+void rotateStepper_3(int distance);
 void rotateStepper_4(int direction);
+void rotateStepper_1_and_2(int Stepper_1_Distance,int Stepper_2_Distance);
 
 #endif /* STEPPER_H_ */

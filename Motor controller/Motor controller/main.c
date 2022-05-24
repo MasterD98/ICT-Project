@@ -24,12 +24,14 @@
 int static volatile ult1_distance;
 int static volatile ult2_distance;
 int static volatile ult3_distance;
-int wasteBinDistance1 = 20;
-int wasteBinDistance2 = 10;
+int wasteBinDistanceZ = 10;
+int wasteBinDistanceX = 20;
 int minLen=4;
 int maxRadius=25;
 int receivedData;
 int isInputDataRecevied=0;
+int static volatile  rounds;
+int static volatile  length;
 
 ISR(USART_RXC_vect){
 	receivedData=UDR;
@@ -38,10 +40,7 @@ ISR(USART_RXC_vect){
 
 int main(void)
 {
-	int rounds;
-	int length;
 	int isMetal;
-	isInputDataRecevied=0;
 	initUltrasonic();
 	initUSART();
 	initSteppers();
@@ -69,8 +68,7 @@ int main(void)
 		ult3_distance = getUltrasonic_3_Distance();
 		// move both clutches forward until ultrasonic output smallest number
 		//TODO move simultaneously
-		rotateStepper_1(1, (ult2_distance-3));
-		rotateStepper_2(1, (ult3_distance-3));
+		rotateStepper_1_and_2((ult2_distance-3),(ult3_distance-3));
 
 		// move clutches through rail to align
 
@@ -86,20 +84,18 @@ int main(void)
 		}
 
 		while(!isInputDataRecevied);//get length value from user input
-		length=(int)receivedData;
+		length=receivedData;
 		isInputDataRecevied=0;
 		
 		while(!isInputDataRecevied);//get unit value from user input
-		rounds=(int)receivedData;
+		rounds=receivedData;
 		isInputDataRecevied=0;
 
 		// repeat cutting process(loop rounds time)
 		for (int i = 0; i < rounds; i++)
 		{
 			//rotate stepper motor2 and 1 backwards
-			rotateStepper_1(0,maxRadius);
-			rotateStepper_2(0,maxRadius);
-			while ((getUltrasonic_2_Distance() < maxRadius) && (getUltrasonic_3_Distance() < maxRadius));
+			rotateStepper_1_and_2(-maxRadius,-maxRadius);
 			// move pipe forward according to the calculated length
 			rotateDCMotors(0);
 			while(getUltrasonic_1_Distance()>3);
@@ -107,8 +103,7 @@ int main(void)
 			ult2_distance = getUltrasonic_2_Distance();
 			ult3_distance = getUltrasonic_3_Distance();
 			//rotate stepper motor2 and 1 forward
-			rotateStepper_1(1, ult2_distance);
-			rotateStepper_2(1, ult3_distance);
+			rotateStepper_1_and_2((ult2_distance-3),(ult3_distance-3));
 
 			// get ultrasonic1 output distance (distance1)
 			ult1_distance=getUltrasonic_1_Distance();
@@ -117,40 +112,38 @@ int main(void)
 			while((getUltrasonic_1_Distance()-ult1_distance)<length)
 			stopDCMotors();
 			// rotate stepper motor3 forward
-			rotateStepper_3(1,maxRadius);
+			rotateStepper_3(maxRadius);
 			// pipe cutting process
 			// start rotating cutting blade DC motor
 			sendData(START);
 			// rotate stepper motor4
 			rotateStepper_4(1);
 			rotateStepper_4(0);
-			rotateStepper_3(0,maxRadius);
+			rotateStepper_3(-maxRadius);
 			sendData(STOP);
 		}
 
 		// check if leftover pipe is waste or not
 		if (!(PIND & 1 << PD4)){
+			// get ultrasonic1 output distance (distance1)
+			ult1_distance=getUltrasonic_1_Distance();
 			// move both clutches backward though rail
 			rotateDCMotors(0);
-			while (getUltrasonic_1_Distance() == wasteBinDistance1)
+			while (getUltrasonic_1_Distance()-ult1_distance > wasteBinDistanceZ)
 			;
 			stopDCMotors();
 			if (isMetal){
 				// move clutch1 backward && clutch2 forward
-				rotateStepper_1(0,wasteBinDistance2);
-				rotateStepper_2(1,wasteBinDistance2);
+				rotateStepper_1_and_2(-wasteBinDistanceX,wasteBinDistanceX);
 				// when position correctly, drop wastage
-				rotateStepper_2(0,wasteBinDistance2);
-				_delay_ms(100);
-				rotateStepper_1(1,wasteBinDistance2);
+				rotateStepper_2(-wasteBinDistanceX);
+				rotateStepper_1(wasteBinDistanceX);
 				}else{
 				// move clutch2 backward && clutch1 forward
-				rotateStepper_1(1,wasteBinDistance2);
-				rotateStepper_2(0,wasteBinDistance2);
+				rotateStepper_1_and_2(wasteBinDistanceX,-wasteBinDistanceX);
 				// when position correctly, drop wastage
-				rotateStepper_1(0,wasteBinDistance2);
-				_delay_ms(100);
-				rotateStepper_2(1,wasteBinDistance2);
+				rotateStepper_1(-wasteBinDistanceX);
+				rotateStepper_2(wasteBinDistanceX);
 			}
 		}
 	}
