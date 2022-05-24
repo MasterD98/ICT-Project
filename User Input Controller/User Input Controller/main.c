@@ -117,7 +117,7 @@ int main(void)
 		//send length
 		sendData(x1);
 		// wait
-		_delay_ms(100);
+		_delay_ms(500);
 		//send quantity
 		sendData(x2);
 		

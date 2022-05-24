@@ -3,31 +3,31 @@ User Input Controller.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000005e2  00000000  00000000  00000094  2**1
+  0 .text         000005e8  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000044  00800060  000005e2  00000676  2**0
+  1 .data         00000044  00800060  000005e8  0000067c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000009  008000a4  008000a4  000006ba  2**0
+  2 .bss          00000009  008000a4  008000a4  000006c0  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000006ba  2**0
+  3 .comment      00000030  00000000  00000000  000006c0  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000006ec  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000006f0  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000e0  00000000  00000000  00000728  2**0
+  5 .debug_aranges 000000e0  00000000  00000000  0000072c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000150a  00000000  00000000  00000808  2**0
+  6 .debug_info   0000150a  00000000  00000000  0000080c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000993  00000000  00000000  00001d12  2**0
+  7 .debug_abbrev 00000993  00000000  00000000  00001d16  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000b51  00000000  00000000  000026a5  2**0
+  8 .debug_line   00000b57  00000000  00000000  000026a9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000018c  00000000  00000000  000031f8  2**2
+  9 .debug_frame  0000018c  00000000  00000000  00003200  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000444  00000000  00000000  00003384  2**0
+ 10 .debug_str    00000444  00000000  00000000  0000338c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000b05  00000000  00000000  000037c8  2**0
+ 11 .debug_loc    00000b05  00000000  00000000  000037d0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000090  00000000  00000000  000042cd  2**0
+ 12 .debug_ranges 00000090  00000000  00000000  000042d5  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,7 +67,7 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	e2 ee       	ldi	r30, 0xE2	; 226
+  66:	e8 ee       	ldi	r30, 0xE8	; 232
   68:	f5 e0       	ldi	r31, 0x05	; 5
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
@@ -90,16 +90,16 @@ Disassembly of section .text:
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 c6 01 	call	0x38c	; 0x38c <main>
-  8a:	0c 94 ef 02 	jmp	0x5de	; 0x5de <_exit>
+  8a:	0c 94 f2 02 	jmp	0x5e4	; 0x5e4 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000092 <setMotorSpeed>:
+	DDRB |= (1 << PB3) | (1<<PB2) | (1<<PB1);
 	TCCR0  = (1 << WGM00) | (1 << WGM01) | (1 << COM01) | (1 << CS00);
-	OCR0 = 100;
+	OCR0 = 255;
 }
-
 void setMotorSpeed(int bladeMotorSpeed){
 	OCR0 = bladeMotorSpeed;
   92:	8c bf       	out	0x3c, r24	; 60
@@ -935,10 +935,10 @@ int main(void)
 		//send length
 		sendData(x1);
  53c:	80 91 a8 00 	lds	r24, 0x00A8	; 0x8000a8 <x1>
- 540:	0e 94 e5 02 	call	0x5ca	; 0x5ca <sendData>
+ 540:	0e 94 e8 02 	call	0x5d0	; 0x5d0 <sendData>
  544:	2f ef       	ldi	r18, 0xFF	; 255
- 546:	81 ee       	ldi	r24, 0xE1	; 225
- 548:	94 e0       	ldi	r25, 0x04	; 4
+ 546:	89 e6       	ldi	r24, 0x69	; 105
+ 548:	98 e1       	ldi	r25, 0x18	; 24
  54a:	21 50       	subi	r18, 0x01	; 1
  54c:	80 40       	sbci	r24, 0x00	; 0
  54e:	90 40       	sbci	r25, 0x00	; 0
@@ -946,11 +946,11 @@ int main(void)
  552:	00 c0       	rjmp	.+0      	; 0x554 <__EEPROM_REGION_LENGTH__+0x154>
  554:	00 00       	nop
 		// wait
-		_delay_ms(100);
+		_delay_ms(500);
 		//send quantity
 		sendData(x2);
  556:	80 91 a6 00 	lds	r24, 0x00A6	; 0x8000a6 <x2>
- 55a:	0e 94 e5 02 	call	0x5ca	; 0x5ca <sendData>
+ 55a:	0e 94 e8 02 	call	0x5d0	; 0x5d0 <sendData>
 		
 		lcdcmd(0x01);
  55e:	81 e0       	ldi	r24, 0x01	; 1
@@ -1013,55 +1013,60 @@ void initUSART(){
  5b4:	81 b3       	in	r24, 0x11	; 17
  5b6:	82 60       	ori	r24, 0x02	; 2
  5b8:	81 bb       	out	0x11, r24	; 17
+
+	DDRD &= ~(1 << PIND0);//pin0 of portD as INPUT
+ 5ba:	81 b3       	in	r24, 0x11	; 17
+ 5bc:	8e 7f       	andi	r24, 0xFE	; 254
+ 5be:	81 bb       	out	0x11, r24	; 17
 	
 	int UBBRValue = 25;//AS described before setting baud rate
 
 	//Put the upper part of the baud number here (bits 8 to 11)
 
 	UBRRH = (unsigned char) (UBBRValue >> 8);
- 5ba:	10 bc       	out	0x20, r1	; 32
+ 5c0:	10 bc       	out	0x20, r1	; 32
 
 	//Put the remaining part of the baud number here
 
 	UBRRL = (unsigned char) UBBRValue;
- 5bc:	89 e1       	ldi	r24, 0x19	; 25
- 5be:	89 b9       	out	0x09, r24	; 9
+ 5c2:	89 e1       	ldi	r24, 0x19	; 25
+ 5c4:	89 b9       	out	0x09, r24	; 9
 
 	//Enable the receiver, transmitter and receiver interrupt
 	UCSRB = (1 << RXEN) | (1 << TXEN) | (1 << RXCIE);
- 5c0:	88 e9       	ldi	r24, 0x98	; 152
- 5c2:	8a b9       	out	0x0a, r24	; 10
+ 5c6:	88 e9       	ldi	r24, 0x98	; 152
+ 5c8:	8a b9       	out	0x0a, r24	; 10
 
 	//Set 2 stop bits and data bit length is 8-bit
 
 	UCSRC = (1 << USBS) | (3 << UCSZ0);
- 5c4:	8e e0       	ldi	r24, 0x0E	; 14
- 5c6:	80 bd       	out	0x20, r24	; 32
- 5c8:	08 95       	ret
+ 5ca:	8e e0       	ldi	r24, 0x0E	; 14
+ 5cc:	80 bd       	out	0x20, r24	; 32
+ 5ce:	08 95       	ret
 
-000005ca <sendData>:
+000005d0 <sendData>:
 	
 }
 
 
 void sendData(uint8_t byte){
 	while (! (UCSRA & (1 << UDRE)) );
- 5ca:	5d 9b       	sbis	0x0b, 5	; 11
- 5cc:	fe cf       	rjmp	.-4      	; 0x5ca <sendData>
+ 5d0:	5d 9b       	sbis	0x0b, 5	; 11
+ 5d2:	fe cf       	rjmp	.-4      	; 0x5d0 <sendData>
 
 	{
 		UDR = byte;//once transmitter is ready sent eight bit data
- 5ce:	8c b9       	out	0x0c, r24	; 12
- 5d0:	8f e1       	ldi	r24, 0x1F	; 31
- 5d2:	9e e4       	ldi	r25, 0x4E	; 78
- 5d4:	01 97       	sbiw	r24, 0x01	; 1
- 5d6:	f1 f7       	brne	.-4      	; 0x5d4 <sendData+0xa>
- 5d8:	00 c0       	rjmp	.+0      	; 0x5da <sendData+0x10>
- 5da:	00 00       	nop
- 5dc:	08 95       	ret
+ 5d4:	8c b9       	out	0x0c, r24	; 12
+ 5d6:	8f e1       	ldi	r24, 0x1F	; 31
+ 5d8:	9e e4       	ldi	r25, 0x4E	; 78
+ 5da:	01 97       	sbiw	r24, 0x01	; 1
+ 5dc:	f1 f7       	brne	.-4      	; 0x5da <sendData+0xa>
+ 5de:	00 c0       	rjmp	.+0      	; 0x5e0 <sendData+0x10>
+ 5e0:	00 00       	nop
+ 5e2:	08 95       	ret
 
-000005de <_exit>:
- 5de:	f8 94       	cli
+000005e4 <_exit>:
+ 5e4:	f8 94       	cli
 
-000005e0 <__stop_program>:
- 5e0:	ff cf       	rjmp	.-2      	; 0x5e0 <__stop_program>
+000005e6 <__stop_program>:
+ 5e6:	ff cf       	rjmp	.-2      	; 0x5e6 <__stop_program>

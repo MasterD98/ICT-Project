@@ -213,7 +213,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x5e2
+.text           0x00000000      0x5e8
  *(.vectors)
  .vectors       0x00000000       0x54 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega32/avr5/crtatmega32.o
                 0x00000000                __vector_default
@@ -321,16 +321,16 @@ END GROUP
  .text.main     0x0000038c      0x228 main.o
                 0x0000038c                main
  .text.initUSART
-                0x000005b4       0x16 usart.o
+                0x000005b4       0x1c usart.o
                 0x000005b4                initUSART
  .text.sendData
-                0x000005ca       0x14 usart.o
-                0x000005ca                sendData
-                0x000005de                . = ALIGN (0x2)
+                0x000005d0       0x14 usart.o
+                0x000005d0                sendData
+                0x000005e4                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000005de        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000005de                _exit
-                0x000005de                exit
+ .fini9         0x000005e4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000005e4                _exit
+                0x000005e4                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -349,11 +349,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000005de        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000005e4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000005e2                _etext = .
+                0x000005e8                _etext = .
 
-.data           0x00800060       0x44 load address 0x000005e2
+.data           0x00800060       0x44 load address 0x000005e8
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -384,8 +384,8 @@ END GROUP
                 0x008000ab                receivedData
                 0x008000ac                y
                 0x008000ad                PROVIDE (__bss_end, .)
-                0x000005e2                __data_load_start = LOADADDR (.data)
-                0x00000626                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000005e8                __data_load_start = LOADADDR (.data)
+                0x0000062c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x008000ad        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -494,14 +494,14 @@ END GROUP
  .debug_abbrev  0x00000744      0x162 main.o
  .debug_abbrev  0x000008a6       0xed usart.o
 
-.debug_line     0x00000000      0xb51
+.debug_line     0x00000000      0xb57
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x116 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_line    0x00000116       0xf2 dcmotor.o
  .debug_line    0x00000208      0x2a1 keypad.o
  .debug_line    0x000004a9      0x21d lcd.o
  .debug_line    0x000006c6      0x342 main.o
- .debug_line    0x00000a08      0x149 usart.o
+ .debug_line    0x00000a08      0x14f usart.o
 
 .debug_frame    0x00000000      0x18c
  *(.debug_frame)

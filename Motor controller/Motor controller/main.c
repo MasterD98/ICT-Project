@@ -29,10 +29,7 @@ int wasteBinDistance2 = 10;
 int minLen=4;
 int maxRadius=25;
 int receivedData;
-int isInputDataRecevied;
-
-
-
+int isInputDataRecevied=0;
 
 ISR(USART_RXC_vect){
 	receivedData=UDR;
@@ -71,18 +68,18 @@ int main(void)
 		ult2_distance = getUltrasonic_2_Distance();
 		ult3_distance = getUltrasonic_3_Distance();
 		// move both clutches forward until ultrasonic output smallest number
-		rotateStepper_1(1, ult2_distance);
-		rotateStepper_2(1, ult3_distance);
-		while ((getUltrasonic_2_Distance() >= 3) && (getUltrasonic_3_Distance() >= 3));
+		//TODO move simultaneously
+		rotateStepper_1(1, (ult2_distance-3));
+		rotateStepper_2(1, (ult3_distance-3));
 
 		// move clutches through rail to align
 
-		if ((PIND & 1 << PD5) && (PIND && 1 << PD6)){ // if both Ir sensor-2,3 are detected pipe
+		if ((PIND & 1 << PD5) && (PIND & 1 << PD6)){ // if both Ir sensor-2,3 are detected pipe
 			rotateDCMotors(1);
-			while (PIND && 1 << PD6);
+			while (PIND & 1 << PD6);
 			stopDCMotors();
 		}
-		else if (!(PIND & 1 << PD5) && !(PIND && 1 << PD6)){ // else if both Ir sensor-2,3 are not detected pipe
+		else if (!(PIND & 1 << PD5) && !(PIND & 1 << PD6)){ // else if both Ir sensor-2,3 are not detected pipe
 			rotateDCMotors(0);
 			while (!(PIND & 1 << PD5));
 			stopDCMotors();

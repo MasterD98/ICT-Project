@@ -11,7 +11,7 @@ void initUSART(){
 	
 	DDRD |= 1 << PIND1;//pin1 of portD as OUTPUT
 
-	//DDRD &= ~(1 << PIND0);//pin0 of portD as INPUT
+	DDRD &= ~(1 << PIND0);//pin0 of portD as INPUT
 	
 	int UBBRValue = 25;//AS described before setting baud rate
 

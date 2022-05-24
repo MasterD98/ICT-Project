@@ -16,5 +16,6 @@
 
 void initUSART();
 void sendData(uint8_t byte);
+uint8_t getReceivedData();
 
 #endif /* USART_H_ */
