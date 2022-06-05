@@ -14,20 +14,22 @@
 
 
 int main(void){
-	initUSART();
-	sei();
+	initUSART(9600);
 	
 	while (1){
 		
 		if (PINA & (1<<PA0)){
 			sendData(START);
-		}else if (PINA & (1<<PA1))
+		}
+		if (PINA & (1<<PA1))
 		{
 			sendData(STOP);
-		}else if (PINA & (1<<PA2))
+		}
+		if (PINA & (1<<PA2))
 		{
 			sendData(HIGH_SPEED);
-		}else if (PINA & (1<<PA3))
+		}
+		if (PINA & (1<<PA3))
 		{
 			sendData(LOW_SPEED);
 		}

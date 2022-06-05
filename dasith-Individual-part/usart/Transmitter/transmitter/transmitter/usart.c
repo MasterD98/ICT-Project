@@ -8,28 +8,25 @@
 #include "usart.h"
 
 
-void initUSART(){
+void initUSART(long USART_BAUDRATE){
 	
 	DDRD |= 1 << PIND1;//pin1 of portD as OUTPUT
-
-	//DDRD &= ~(1 << PIND0);//pin0 of portD as INPUT
 	
-	int UBBRValue = 25;//AS described before setting baud rate
 
 	//Put the upper part of the baud number here (bits 8 to 11)
 
-	UBRRH = (unsigned char) (UBBRValue >> 8);
+	UBRRH = (unsigned char) (BAUD_PRESCALE(USART_BAUDRATE) >> 8);
 
 	//Put the remaining part of the baud number here
 
-	UBRRL = (unsigned char) UBBRValue;
+	UBRRL = (unsigned char) BAUD_PRESCALE(USART_BAUDRATE);
 
-	//Enable the receiver, transmitter and receiver interrupt
+	//Enable the receiver, transmitter
 	UCSRB = (1 << RXEN) | (1 << TXEN);
 
 	//Set 2 stop bits and data bit length is 8-bit
 
-	UCSRC = (1 << USBS) | (3 << UCSZ0);
+	UCSRC = (1 << USBS) | (1 << UCSZ0) | (1<<UCSZ1);
 	
 }
 
@@ -44,6 +41,6 @@ void sendData(uint8_t byte){
 }
 
 uint8_t getReceivedData(){
-	while ((UCSRA & (1 << RXC)) == 0);/* Wait till data is received */
+	while (!(UCSRA & (1 << RXC)));/* Wait till data is received */
 	return UDR;		/* Return the byte */
 }

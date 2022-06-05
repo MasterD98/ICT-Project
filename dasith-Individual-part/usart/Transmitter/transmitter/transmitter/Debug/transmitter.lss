@@ -3,29 +3,29 @@ transmitter.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000d0  00000000  00000000  00000054  2**1
+  0 .text         0000015a  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000124  2**0
+  1 .data         00000000  00800060  00800060  000001ae  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000124  2**0
+  2 .comment      00000030  00000000  00000000  000001ae  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000154  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001e0  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000050  00000000  00000000  00000190  2**0
+  4 .debug_aranges 00000050  00000000  00000000  0000021c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000734  00000000  00000000  000001e0  2**0
+  5 .debug_info   0000074f  00000000  00000000  0000026c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000643  00000000  00000000  00000914  2**0
+  6 .debug_abbrev 00000611  00000000  00000000  000009bb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000367  00000000  00000000  00000f57  2**0
+  7 .debug_line   00000361  00000000  00000000  00000fcc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000068  00000000  00000000  000012c0  2**2
+  8 .debug_frame  00000068  00000000  00000000  00001330  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000039d  00000000  00000000  00001328  2**0
+  9 .debug_str    000003a2  00000000  00000000  00001398  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000067  00000000  00000000  000016c5  2**0
+ 10 .debug_loc    00000093  00000000  00000000  0000173a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000030  00000000  00000000  0000172c  2**0
+ 11 .debug_ranges 00000030  00000000  00000000  000017cd  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -61,7 +61,7 @@ Disassembly of section .text:
   5c:	de bf       	out	0x3e, r29	; 62
   5e:	cd bf       	out	0x3d, r28	; 61
   60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
-  64:	0c 94 66 00 	jmp	0xcc	; 0xcc <_exit>
+  64:	0c 94 ab 00 	jmp	0x156	; 0x156 <_exit>
 
 00000068 <__bad_interrupt>:
   68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -72,109 +72,184 @@ Disassembly of section .text:
 
 
 int main(void){
-	initUSART();
-  6c:	0e 94 51 00 	call	0xa2	; 0xa2 <initUSART>
-	sei();
-  70:	78 94       	sei
+	initUSART(9600);
+  6c:	60 e8       	ldi	r22, 0x80	; 128
+  6e:	75 e2       	ldi	r23, 0x25	; 37
+  70:	80 e0       	ldi	r24, 0x00	; 0
+  72:	90 e0       	ldi	r25, 0x00	; 0
+  74:	0e 94 51 00 	call	0xa2	; 0xa2 <initUSART>
 	
 	while (1){
 		
 		if (PINA & (1<<PA0)){
-  72:	c8 9b       	sbis	0x19, 0	; 25
-  74:	04 c0       	rjmp	.+8      	; 0x7e <main+0x12>
+  78:	c8 9b       	sbis	0x19, 0	; 25
+  7a:	03 c0       	rjmp	.+6      	; 0x82 <main+0x16>
 			sendData(START);
-  76:	81 e0       	ldi	r24, 0x01	; 1
-  78:	0e 94 5c 00 	call	0xb8	; 0xb8 <sendData>
-  7c:	fa cf       	rjmp	.-12     	; 0x72 <main+0x6>
-		}else if (PINA & (1<<PA1))
-  7e:	c9 9b       	sbis	0x19, 1	; 25
-  80:	04 c0       	rjmp	.+8      	; 0x8a <main+0x1e>
+  7c:	81 e0       	ldi	r24, 0x01	; 1
+  7e:	0e 94 7f 00 	call	0xfe	; 0xfe <sendData>
+		}
+		if (PINA & (1<<PA1))
+  82:	c9 9b       	sbis	0x19, 1	; 25
+  84:	03 c0       	rjmp	.+6      	; 0x8c <main+0x20>
 		{
 			sendData(STOP);
-  82:	80 e0       	ldi	r24, 0x00	; 0
-  84:	0e 94 5c 00 	call	0xb8	; 0xb8 <sendData>
-  88:	f4 cf       	rjmp	.-24     	; 0x72 <main+0x6>
-		}else if (PINA & (1<<PA2))
-  8a:	ca 9b       	sbis	0x19, 2	; 25
-  8c:	04 c0       	rjmp	.+8      	; 0x96 <main+0x2a>
+  86:	80 e0       	ldi	r24, 0x00	; 0
+  88:	0e 94 7f 00 	call	0xfe	; 0xfe <sendData>
+		}
+		if (PINA & (1<<PA2))
+  8c:	ca 9b       	sbis	0x19, 2	; 25
+  8e:	03 c0       	rjmp	.+6      	; 0x96 <main+0x2a>
 		{
 			sendData(HIGH_SPEED);
-  8e:	82 e0       	ldi	r24, 0x02	; 2
-  90:	0e 94 5c 00 	call	0xb8	; 0xb8 <sendData>
-  94:	ee cf       	rjmp	.-36     	; 0x72 <main+0x6>
-		}else if (PINA & (1<<PA3))
+  90:	82 e0       	ldi	r24, 0x02	; 2
+  92:	0e 94 7f 00 	call	0xfe	; 0xfe <sendData>
+		}
+		if (PINA & (1<<PA3))
   96:	cb 9b       	sbis	0x19, 3	; 25
-  98:	ec cf       	rjmp	.-40     	; 0x72 <main+0x6>
+  98:	ef cf       	rjmp	.-34     	; 0x78 <main+0xc>
 		{
 			sendData(LOW_SPEED);
   9a:	83 e0       	ldi	r24, 0x03	; 3
-  9c:	0e 94 5c 00 	call	0xb8	; 0xb8 <sendData>
-  a0:	e8 cf       	rjmp	.-48     	; 0x72 <main+0x6>
+  9c:	0e 94 7f 00 	call	0xfe	; 0xfe <sendData>
+  a0:	eb cf       	rjmp	.-42     	; 0x78 <main+0xc>
 
 000000a2 <initUSART>:
 #include "usart.h"
 
 
-void initUSART(){
+void initUSART(long USART_BAUDRATE){
 	
 	DDRD |= 1 << PIND1;//pin1 of portD as OUTPUT
-  a2:	81 b3       	in	r24, 0x11	; 17
-  a4:	82 60       	ori	r24, 0x02	; 2
-  a6:	81 bb       	out	0x11, r24	; 17
+  a2:	21 b3       	in	r18, 0x11	; 17
+  a4:	22 60       	ori	r18, 0x02	; 2
+  a6:	21 bb       	out	0x11, r18	; 17
 	
-	int UBBRValue = 25;//AS described before setting baud rate
 
 	//Put the upper part of the baud number here (bits 8 to 11)
 
-	UBRRH = (unsigned char) (UBBRValue >> 8);
-  a8:	10 bc       	out	0x20, r1	; 32
+	UBRRH = (unsigned char) (BAUD_PRESCALE(USART_BAUDRATE) >> 8);
+  a8:	dc 01       	movw	r26, r24
+  aa:	cb 01       	movw	r24, r22
+  ac:	88 0f       	add	r24, r24
+  ae:	99 1f       	adc	r25, r25
+  b0:	aa 1f       	adc	r26, r26
+  b2:	bb 1f       	adc	r27, r27
+  b4:	88 0f       	add	r24, r24
+  b6:	99 1f       	adc	r25, r25
+  b8:	aa 1f       	adc	r26, r26
+  ba:	bb 1f       	adc	r27, r27
+  bc:	9c 01       	movw	r18, r24
+  be:	ad 01       	movw	r20, r26
+  c0:	22 0f       	add	r18, r18
+  c2:	33 1f       	adc	r19, r19
+  c4:	44 1f       	adc	r20, r20
+  c6:	55 1f       	adc	r21, r21
+  c8:	22 0f       	add	r18, r18
+  ca:	33 1f       	adc	r19, r19
+  cc:	44 1f       	adc	r20, r20
+  ce:	55 1f       	adc	r21, r21
+  d0:	60 e0       	ldi	r22, 0x00	; 0
+  d2:	74 e2       	ldi	r23, 0x24	; 36
+  d4:	84 ef       	ldi	r24, 0xF4	; 244
+  d6:	90 e0       	ldi	r25, 0x00	; 0
+  d8:	0e 94 89 00 	call	0x112	; 0x112 <__udivmodsi4>
+  dc:	da 01       	movw	r26, r20
+  de:	c9 01       	movw	r24, r18
+  e0:	01 97       	sbiw	r24, 0x01	; 1
+  e2:	a1 09       	sbc	r26, r1
+  e4:	b1 09       	sbc	r27, r1
+  e6:	89 2f       	mov	r24, r25
+  e8:	9a 2f       	mov	r25, r26
+  ea:	ab 2f       	mov	r26, r27
+  ec:	bb 27       	eor	r27, r27
+  ee:	80 bd       	out	0x20, r24	; 32
 
 	//Put the remaining part of the baud number here
 
-	UBRRL = (unsigned char) UBBRValue;
-  aa:	89 e1       	ldi	r24, 0x19	; 25
-  ac:	89 b9       	out	0x09, r24	; 9
+	UBRRL = (unsigned char) BAUD_PRESCALE(USART_BAUDRATE);
+  f0:	21 50       	subi	r18, 0x01	; 1
+  f2:	29 b9       	out	0x09, r18	; 9
 
-	//Enable the receiver, transmitter and receiver interrupt
+	//Enable the receiver, transmitter
 	UCSRB = (1 << RXEN) | (1 << TXEN);
-  ae:	88 e1       	ldi	r24, 0x18	; 24
-  b0:	8a b9       	out	0x0a, r24	; 10
+  f4:	88 e1       	ldi	r24, 0x18	; 24
+  f6:	8a b9       	out	0x0a, r24	; 10
 
 	//Set 2 stop bits and data bit length is 8-bit
 
 	UCSRC = (1 << USBS) | (3 << UCSZ0);
-  b2:	8e e0       	ldi	r24, 0x0E	; 14
-  b4:	80 bd       	out	0x20, r24	; 32
-  b6:	08 95       	ret
+  f8:	8e e0       	ldi	r24, 0x0E	; 14
+  fa:	80 bd       	out	0x20, r24	; 32
+  fc:	08 95       	ret
 
-000000b8 <sendData>:
+000000fe <sendData>:
 	
 }
 
 void sendData(uint8_t byte){
 	while (! (UCSRA & (1 << UDRE)) );
-  b8:	5d 9b       	sbis	0x0b, 5	; 11
-  ba:	fe cf       	rjmp	.-4      	; 0xb8 <sendData>
+  fe:	5d 9b       	sbis	0x0b, 5	; 11
+ 100:	fe cf       	rjmp	.-4      	; 0xfe <sendData>
 
 	{
 		UDR = byte;//once transmitter is ready sent eight bit data
-  bc:	8c b9       	out	0x0c, r24	; 12
+ 102:	8c b9       	out	0x0c, r24	; 12
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  be:	8f e1       	ldi	r24, 0x1F	; 31
-  c0:	9e e4       	ldi	r25, 0x4E	; 78
-  c2:	01 97       	sbiw	r24, 0x01	; 1
-  c4:	f1 f7       	brne	.-4      	; 0xc2 <sendData+0xa>
-  c6:	00 c0       	rjmp	.+0      	; 0xc8 <sendData+0x10>
-  c8:	00 00       	nop
-  ca:	08 95       	ret
+ 104:	8f e1       	ldi	r24, 0x1F	; 31
+ 106:	9e e4       	ldi	r25, 0x4E	; 78
+ 108:	01 97       	sbiw	r24, 0x01	; 1
+ 10a:	f1 f7       	brne	.-4      	; 0x108 <sendData+0xa>
+ 10c:	00 c0       	rjmp	.+0      	; 0x10e <sendData+0x10>
+ 10e:	00 00       	nop
+ 110:	08 95       	ret
 
-000000cc <_exit>:
-  cc:	f8 94       	cli
+00000112 <__udivmodsi4>:
+ 112:	a1 e2       	ldi	r26, 0x21	; 33
+ 114:	1a 2e       	mov	r1, r26
+ 116:	aa 1b       	sub	r26, r26
+ 118:	bb 1b       	sub	r27, r27
+ 11a:	fd 01       	movw	r30, r26
+ 11c:	0d c0       	rjmp	.+26     	; 0x138 <__udivmodsi4_ep>
 
-000000ce <__stop_program>:
-  ce:	ff cf       	rjmp	.-2      	; 0xce <__stop_program>
+0000011e <__udivmodsi4_loop>:
+ 11e:	aa 1f       	adc	r26, r26
+ 120:	bb 1f       	adc	r27, r27
+ 122:	ee 1f       	adc	r30, r30
+ 124:	ff 1f       	adc	r31, r31
+ 126:	a2 17       	cp	r26, r18
+ 128:	b3 07       	cpc	r27, r19
+ 12a:	e4 07       	cpc	r30, r20
+ 12c:	f5 07       	cpc	r31, r21
+ 12e:	20 f0       	brcs	.+8      	; 0x138 <__udivmodsi4_ep>
+ 130:	a2 1b       	sub	r26, r18
+ 132:	b3 0b       	sbc	r27, r19
+ 134:	e4 0b       	sbc	r30, r20
+ 136:	f5 0b       	sbc	r31, r21
+
+00000138 <__udivmodsi4_ep>:
+ 138:	66 1f       	adc	r22, r22
+ 13a:	77 1f       	adc	r23, r23
+ 13c:	88 1f       	adc	r24, r24
+ 13e:	99 1f       	adc	r25, r25
+ 140:	1a 94       	dec	r1
+ 142:	69 f7       	brne	.-38     	; 0x11e <__udivmodsi4_loop>
+ 144:	60 95       	com	r22
+ 146:	70 95       	com	r23
+ 148:	80 95       	com	r24
+ 14a:	90 95       	com	r25
+ 14c:	9b 01       	movw	r18, r22
+ 14e:	ac 01       	movw	r20, r24
+ 150:	bd 01       	movw	r22, r26
+ 152:	cf 01       	movw	r24, r30
+ 154:	08 95       	ret
+
+00000156 <_exit>:
+ 156:	f8 94       	cli
+
+00000158 <__stop_program>:
+ 158:	ff cf       	rjmp	.-2      	; 0x158 <__stop_program>

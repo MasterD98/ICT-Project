@@ -1,7 +1,7 @@
 /*
  * usart.h
  *
- * Created: 5/24/2022 4:11:07 AM
+ * Created: 5/24/2022 3:48:45 AM
  *  Author: Dasith
  */ 
 
@@ -10,13 +10,15 @@
 #define USART_H_
 
 #define F_CPU 16000000UL
+#define BAUD_PRESCALE(USART_BAUDRATE) (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdlib.h>
 
-void initUSART();
+void initUSART(long USART_BAUDRATE);
 void sendData(uint8_t byte);
 uint8_t getReceivedData();
+
 
 #endif /* USART_H_ */

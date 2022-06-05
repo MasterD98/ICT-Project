@@ -14,8 +14,7 @@ static uint8_t data;
 int main(void)
 {
 
-	initUSART();
-	sei();
+	initUSART(9600);
 	DDRA =0x0F;
 	
 	while(1){
@@ -24,13 +23,16 @@ int main(void)
 		
 		if (data == START){
 			PORTA |= (1 << PA0);
-		}else if (data==STOP)
+		}
+		if (data==STOP)
 		{
 			PORTA |= (1 << PA1);
-		}else if (data==HIGH_SPEED)
+		}
+		if (data==HIGH_SPEED)
 		{
 			PORTA |= (1 << PA2);
-		}else if (data==LOW_SPEED)
+		}
+		if (data==LOW_SPEED)
 		{
 			PORTA |= (1 << PA3);
 		}
