@@ -44,6 +44,7 @@ int main(void)
 	initUltrasonic();
 	initUSART();
 	initSteppers();
+	initDCMotors();
 	sei(); //enable global interrupts
 	while (1)
 	{
@@ -85,9 +86,7 @@ int main(void)
 
 		while(!isInputDataRecevied);//get length value from user input
 		length=receivedData;
-		isInputDataRecevied=0;
-		
-		while(!isInputDataRecevied);//get unit value from user input
+		_delay_ms(1000);
 		rounds=receivedData;
 		isInputDataRecevied=0;
 
